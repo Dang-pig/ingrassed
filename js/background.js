@@ -1,7 +1,7 @@
 function generateBackground() {
     const html = `
       <div class="fixed inset-0 z-n1 w-100 h-100 d-flex flex-col items-center bg-grass">
-          <div class="relative w-100 h-05vh">
+          <div class="relative w-100 h-50vh">
               <canvas id="grassCanvas" class="w-100 h-100"></canvas>
               <div class="absolute bottom-10px h-10px w-100 bg-white z-1"></div>
           </div>
