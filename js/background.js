@@ -296,7 +296,7 @@ function generateJitteredPoints(count, width, height, paddingRatio = 0.2) {
 }
 
 function generateRandomPositionImages() {
-    const images = ['resources/flowerBackground.png'];
+    const images = ['/resources/flowerBackground.png'];
 
     // Calculate the number of images according to the screen size
     // const numberOfImages = Math.floor(Math.sqrt(width * height) / 50);
