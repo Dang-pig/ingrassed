@@ -1,5 +1,6 @@
 :root {
     --green-background: #396a3046;
+    --light-grass: #c1ff6b67;
     --light-green: #C8E2A0;
     --slight-green: #499449;
     --green: #396a30;
@@ -20,6 +21,10 @@ body{
     src: url("https://font-public.canva.com/YAFdJjTk5UU/0/CanvaSans-BoldItalic12646845404018590449.625cf32ea46ae48b58ebd3ff993de469.woff2") format("woff2");
     font-style: italic;
     font-weight: 900;
+}
+
+.shadow {
+    box-shadow: 0px 0px 2px 7px black;
 }
 
 /* ── Display ── */
@@ -266,7 +271,7 @@ body{
 .h-25vh { height: 25vh; }
 .h-30vh { height: 30vh; }
 .h-40vh { height: 40vh; }
-.h-05vh { height: 50vh; }
+.h-50vh { height: 50vh; }
 .h-60vh { height: 60vh; }
 .h-75vh { height: 75vh; }
 .h-90vh { height: 90vh; }
@@ -601,8 +606,10 @@ body{
 .bg-hover { transition: ease-in 0.5s; }
 .bg-hover-cream:hover { background-color: var(--cream); }
 .bg-hover-green:hover { background-color: var(--green); }
+.bg-hover-green-bg:hover { background-color: var(--green-background); }
 .bg-hover-white:hover { background-color: var(--white); }
 .bg-hover-grass:hover { background-color: var(--light-green); }
+.bg-hover-light-grass:hover { background-color: var(--light-grass); }
 
 /* ── Overflow ── */
 .overflow-visible { overflow: visible; }
@@ -655,6 +662,14 @@ body{
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .text-justify { text-align: justify; }
+.text-outline {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--cream);
+}
+.text-outline * {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--cream);
+}
 
 .line-150 { line-height: 1.5; }
 
@@ -697,6 +712,13 @@ body{
 .font-160pc { font-size: 160%; }
 .font-175pc { font-size: 175%; }
 .font-200pc { font-size: 200%; }
+.font-300pc { font-size: 300%; }
+.font-350pc { font-size: 350%; }
+.font-400pc { font-size: 400%; }
+.font-450pc { font-size: 450%; }
+.font-500pc { font-size: 500%; }
+.font-550pc { font-size: 550%; }
+.font-600pc { font-size: 600%; }
 
 /* ── Opacity ── */
 .opacity-0 { opacity: 0; }
@@ -719,4 +741,61 @@ body{
     color: var(--green);
     font-size: 1.5rem;
     font-weight: bold;
+}
+
+/* Other classes */
+
+.ingrassed-intro {
+    position: relative;
+}
+
+.ingrassed-intro::before {
+    display: inline-block;
+    content: "\"──────────────";
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    font-size: 300%;
+    font-family: 'CanvaSans-BoldItalic', sans-serif;
+
+    color: #cdd9be;
+}
+
+.ingrassed-intro::after {
+    display: inline-block;
+    content: "\"──────────────";
+    position: absolute;
+    bottom: -10px;
+    right: 15px;
+    font-size: 300%;
+    font-family: 'CanvaSans-BoldItalic', sans-serif;
+    
+    color: #cdd9be;
+
+    transform: rotate(180deg);
+}
+
+.navbar {
+    text-transform: capitalize;
+}
+
+.hover-underline {
+    position: relative;
+}
+
+.hover-underline::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    background: var(--cream);
+    bottom: 0px;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease-out;
+}
+
+.hover-underline:hover::after {
+    transform: scaleX(1);
 }
