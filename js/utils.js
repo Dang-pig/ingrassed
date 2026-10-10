@@ -1,3 +1,10 @@
+(function () {
+  const link = document.createElement('link');
+  link.rel = 'icon';
+  link.href = '/favicon.ico';
+  document.head.appendChild(link);
+})();
+
 /**
  * Unified Parser Function: GenerateDOMFromText
  * Converts formatted text (!bold!, *italic*, _underline_, \) into DOM nodes.
