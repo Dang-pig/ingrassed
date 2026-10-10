@@ -242,3 +242,137 @@ updateScrollHint();
 window.addEventListener("scroll", removeScrollHint, { once: true });
 
 window.addEventListener("resize", updateScrollHint);
+
+/**
+ * Click-to-view overlay for images with class "click-to-view".
+ * Creates a full-screen layer: dimmed backdrop + cream frame matching the image aspect ratio.
+ */
+const IMAGE_VIEW_LAYER_ID = "image-view-layer";
+
+function closeImageView() {
+  const layer = document.getElementById(IMAGE_VIEW_LAYER_ID);
+  if (!layer) return;
+  if (typeof layer._teardown === "function") layer._teardown();
+  layer.remove();
+}
+
+function getImageViewMaxBox() {
+  const viewport = window.visualViewport;
+  const viewW = viewport ? viewport.width : document.documentElement.clientWidth;
+  const viewH = viewport ? viewport.height : document.documentElement.clientHeight;
+  return {
+    maxW: viewW * 0.8,
+    maxH: viewH * 0.8
+  };
+}
+
+function sizeImageViewContainer(container, img) {
+  const naturalW = img.naturalWidth || img.width;
+  const naturalH = img.naturalHeight || img.height;
+  if (!naturalW || !naturalH) return;
+
+  const { maxW, maxH } = getImageViewMaxBox();
+  const ratio = naturalW / naturalH;
+
+  let width = maxW;
+  let height = width / ratio;
+  if (height > maxH) {
+    height = maxH;
+    width = height * ratio;
+  }
+
+  container.style.width = `${width}px`;
+  container.style.maxWidth = `${maxW}px`;
+  container.style.height = `${height}px`;
+  container.style.maxHeight = `${maxH}px`;
+}
+
+function openImageView(sourceImg) {
+  closeImageView();
+
+  const layer = document.createElement("div");
+  layer.id = IMAGE_VIEW_LAYER_ID;
+  layer.className = "image-view-layer";
+  layer.setAttribute("role", "dialog");
+  layer.setAttribute("aria-modal", "true");
+  layer.setAttribute("aria-label", "Image viewer");
+
+  const closeBtn = document.createElement("button");
+  closeBtn.type = "button";
+  closeBtn.className = "image-view-close";
+  closeBtn.setAttribute("aria-label", "Close image view");
+  closeBtn.innerHTML = `
+    <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+      <path d="M6 6 L22 22 M22 6 L6 22"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"/>
+    </svg>
+  `;
+
+  const container = document.createElement("div");
+  container.className = "image-view-container";
+
+  const viewImg = document.createElement("img");
+  viewImg.className = "image-view-photo";
+  viewImg.alt = sourceImg.alt || "";
+  viewImg.src = sourceImg.currentSrc || sourceImg.src;
+
+  sizeImageViewContainer(container, sourceImg);
+
+  const onResize = () => sizeImageViewContainer(container, viewImg);
+  window.addEventListener("resize", onResize);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", onResize);
+  }
+
+  container.appendChild(viewImg);
+  layer.appendChild(closeBtn);
+  layer.appendChild(container);
+  document.body.appendChild(layer);
+
+  const teardown = () => {
+    window.removeEventListener("resize", onResize);
+    if (window.visualViewport) {
+      window.visualViewport.removeEventListener("resize", onResize);
+    }
+  };
+  layer._teardown = teardown;
+
+  closeBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    closeImageView();
+  });
+
+  container.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+
+  layer.addEventListener("click", closeImageView);
+
+  const reveal = () => {
+    if (!document.body.contains(layer)) return;
+    sizeImageViewContainer(container, viewImg);
+    layer.classList.add("is-ready");
+  };
+
+  const decodeReady = viewImg.decode
+    ? viewImg.decode()
+    : (viewImg.complete && viewImg.naturalWidth
+        ? Promise.resolve()
+        : new Promise((resolve) => {
+            viewImg.addEventListener("load", resolve, { once: true });
+            viewImg.addEventListener("error", resolve, { once: true });
+          }));
+
+  decodeReady.then(reveal).catch(reveal);
+}
+
+document.addEventListener("click", (event) => {
+  const targetImg = event.target.closest("img.click-to-view");
+  if (!targetImg) return;
+  event.preventDefault();
+  event.stopPropagation();
+  openImageView(targetImg);
+});

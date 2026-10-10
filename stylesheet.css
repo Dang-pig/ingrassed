@@ -821,3 +821,74 @@ body{
 .hover-highlight-underline:hover::after {
     transform: scaleX(1);
 }
+
+/* ── Click-to-view image overlay ── */
+img.click-to-view {
+    cursor: zoom-in;
+}
+
+.image-view-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 20000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.65);
+    box-sizing: border-box;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.image-view-layer.is-ready {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.image-view-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10001;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: none;
+    border-radius: 9999px;
+    background: rgba(0, 0, 0, 0.35);
+    color: var(--cream);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-view-close:hover {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.image-view-container {
+    background: var(--cream);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 80vw;
+    max-height: 80dvh;
+    overflow: hidden;
+}
+
+.image-view-photo {
+    width: auto;
+    height: auto;
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+    border-radius: 30px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    display: block;
+}
